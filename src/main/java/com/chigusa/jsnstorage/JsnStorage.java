@@ -74,7 +74,7 @@ public final class JsnStorage {
             final BlockBehaviour.Properties bp = base;
             DeferredBlock<StorageBlock> c = BLOCKS.register(t.id + "_chest", () -> new StorageBlock(bp, t, Kind.CHEST));
             DeferredBlock<StorageBlock> s = BLOCKS.register(t.id + "_shulker_box", () -> new StorageBlock(
-                    BlockBehaviour.Properties.of().strength(2F).sound(SoundType.SHULKER_BOX).mapColor(MapColor.COLOR_PURPLE).noOcclusion()
+                    BlockBehaviour.Properties.of().strength(2F).sound(SoundType.STONE).mapColor(MapColor.COLOR_PURPLE).noOcclusion()
                             .pushReaction(PushReaction.DESTROY), t, Kind.SHULKER));
             CHESTS.put(t, c);
             SHULKERS.put(t, s);
