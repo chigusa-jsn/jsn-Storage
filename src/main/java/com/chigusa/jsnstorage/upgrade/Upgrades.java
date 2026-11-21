@@ -15,8 +15,13 @@ public final class Upgrades {
 
     /** 容量アップ：銅2倍・金4倍・ダイヤ8倍 */
     public static int stackMultiplier(StorageInv inv) {
-        ItemStack s = find(inv, UpgradeType.STACK);
-        return s.getItem() instanceof UpgradeItem u ? 2 << u.rank : 1;
+        // いくつも付けたら倍率を足し算（ダイヤ2つで16倍）
+        int sum = 0;
+        for (int i = 0; i < inv.upgrades.getSlots(); i++) {
+            ItemStack s = inv.upgrades.getStackInSlot(i);
+            if (s.getItem() instanceof UpgradeItem u && u.type == UpgradeType.STACK) sum += UpgradeType.stackFactor(u.rank);
+        }
+        return Math.max(1, sum);
     }
 
     private Upgrades() {}

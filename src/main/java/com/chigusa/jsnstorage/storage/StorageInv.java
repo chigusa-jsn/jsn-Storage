@@ -101,7 +101,9 @@ public class StorageInv extends ItemStackHandler {
     /** 同じ種類のアップグレードは1つまで */
     public boolean canAddUpgrade(int slot, ItemStack stack) {
         for (int i = 0; i < upgrades.getSlots(); i++)
-            if (i != slot && !upgrades.getStackInSlot(i).isEmpty() && upgrades.getStackInSlot(i).getItem() == stack.getItem()) return false;
+            if (i != slot && !upgrades.getStackInSlot(i).isEmpty() && com.chigusa.jsnstorage.upgrade.UpgradeItem.is(stack)
+                    && ((com.chigusa.jsnstorage.upgrade.UpgradeItem) stack.getItem()).type != com.chigusa.jsnstorage.upgrade.UpgradeType.STACK
+                    && upgrades.getStackInSlot(i).getItem() == stack.getItem()) return false;
         return com.chigusa.jsnstorage.upgrade.UpgradeItem.allowed(stack, kind);
     }
 

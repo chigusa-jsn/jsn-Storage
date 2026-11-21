@@ -36,6 +36,27 @@ public enum UpgradeType {
         };
     }
 
+    /** 容量アップの倍率（銅2倍・金4倍・ダイヤ8倍） */
+    public static int stackFactor(int rank) {
+        return 2 << rank;
+    }
+
+    /** 自動で拾う範囲 */
+    public static int pickupRadius(int rank) {
+        return new int[]{3, 6, 10}[Math.max(0, Math.min(2, rank))];
+    }
+
+    /** このランクの説明（ランクごとに数字を1つだけ書く） */
+    public String desc(int rank) {
+        return switch (this) {
+            case STACK -> "1マスに入る数が " + stackFactor(rank) + "倍 になる（いくつも付けると足し算で増える）";
+            case PICKUP -> "登録したアイテムだけ、半径" + pickupRadius(rank) + "マスから拾う。ほかの人が落とした物は拾わない";
+            case FEEDING -> "おなかがすいたら、登録した食べ物を食べる" + (rank >= 2 ? "（むだなく選ぶ・HPが減ったら回復の食べ物も）" : rank == 1 ? "（むだなく選ぶ）" : "");
+            case REFILL -> "手のブロックがなくなったら補充" + (rank >= 2 ? "（矢も・こわれそうな道具も交換）" : rank == 1 ? "（矢も）" : "");
+            default -> desc;
+        };
+    }
+
     /** 登録する枠の数（0なら登録なし） */
     public int filterSize(int rank) {
         return switch (this) {

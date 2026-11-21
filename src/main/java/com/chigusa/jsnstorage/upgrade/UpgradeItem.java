@@ -31,7 +31,7 @@ public class UpgradeItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext ctx, List<Component> tip, TooltipFlag flag) {
-        tip.add(Component.literal("§7" + type.desc));
+        tip.add(Component.literal("§7" + type.desc(rank)));
         StringBuilder where = new StringBuilder("§8つけられる：");
         for (Kind k : Kind.values()) if (type.allowed(k)) where.append(k.name).append(" ");
         tip.add(Component.literal(where.toString()));
