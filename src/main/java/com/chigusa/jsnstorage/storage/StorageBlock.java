@@ -76,7 +76,8 @@ public class StorageBlock extends BaseEntityBlock {
     @Override
     public <T extends BlockEntity> net.minecraft.world.level.block.entity.BlockEntityTicker<T> getTicker(Level level, BlockState state,
                                                                                                    net.minecraft.world.level.block.entity.BlockEntityType<T> type) {
-        return level.isClientSide ? null : createTickerHelper(type, com.chigusa.jsnstorage.JsnStorage.STORAGE_BE.get(), StorageBlockEntity::serverTick);
+        if (level.isClientSide) return kind == Kind.CHEST ? createTickerHelper(type, com.chigusa.jsnstorage.JsnStorage.STORAGE_BE.get(), StorageBlockEntity::clientTick) : null;
+        return createTickerHelper(type, com.chigusa.jsnstorage.JsnStorage.STORAGE_BE.get(), StorageBlockEntity::serverTick);
     }
 
     @Override

@@ -59,6 +59,17 @@ def backpack_tex(tid, trim, trim_d):
     d.rectangle([7, 6, 8, 8], fill=T if tid != "wood" else hx("#c8ccd0"))
     d.line([3, 8, 12, 8], fill=TD if tid != "wood" else bodyd)
     save(im, f"{A}/textures/item/{tid}_backpack.png")
+    # 背負ったときの立体モデル用
+    w = Image.new("RGBA", (16, 16)); d = ImageDraw.Draw(w)
+    d.rectangle([0, 0, 15, 15], fill=body); d.rectangle([0, 0, 15, 15], outline=bodyd)
+    d.line([0, 5, 15, 5], fill=TD if tid != "wood" else bodyd); d.rectangle([0, 0, 15, 4], fill=mix(body, 1.15))
+    d.rectangle([7, 3, 8, 6], fill=T if tid != "wood" else hx("#c8ccd0"))
+    save(w, f"{A}/textures/item/{tid}_backpack_worn.png")
+    wj(f"{A}/models/item/{tid}_backpack_worn.json", {"textures": {"all": f"jsn_storage:item/{tid}_backpack_worn",
+        "particle": f"jsn_storage:item/{tid}_backpack_worn"}, "elements": [
+        {"from": [3, 2, 0], "to": [13, 14, 4], "faces": {k: {"texture": "#all"} for k in ("north", "south", "east", "west", "up", "down")}},
+        {"from": [4, 3, 4], "to": [12, 8, 6], "faces": {k: {"texture": "#all", "uv": [4, 9, 12, 14]} for k in ("north", "south", "east", "west", "up", "down")}},
+        {"from": [3, 11, 3.9], "to": [13, 14.2, 4.6], "faces": {k: {"texture": "#all", "uv": [3, 0, 13, 3]} for k in ("north", "south", "east", "west", "up", "down")}}]})
 
 def kit_tex(a, b, ca, cb):
     im = Image.new("RGBA", (16, 16)); d = ImageDraw.Draw(im)
@@ -76,8 +87,17 @@ for i, (tid, jn, bn, trim, trimd) in enumerate(TIERS):
         "north": face("front"), "south": face("side"), "east": face("side"), "west": face("side"), "up": face("top"), "down": face("top")}}]})
     wj(f"{A}/models/block/{tid}_shulker_box.json", {"parent": "minecraft:block/orientable", "textures": {"front": f"jsn_storage:block/{tid}_shulker_front",
         "side": f"jsn_storage:block/{tid}_shulker_side", "top": f"jsn_storage:block/{tid}_shulker_top"}})
+    # 置いたときの台（ふたは BlockEntityRenderer で動かす）とふた
+    im = Image.new("RGBA", (16, 16)); dd = ImageDraw.Draw(im); dd.rectangle([0, 0, 15, 15], fill=hx("#2a1a0e"))
+    dd.rectangle([0, 0, 15, 15], outline=hx(trim)); save(im, f"{A}/textures/block/{tid}_chest_inside.png")
+    tb = dict(t); tb["inside"] = f"jsn_storage:block/{tid}_chest_inside"
+    wj(f"{A}/models/block/{tid}_chest_base.json", {"parent": "minecraft:block/block", "textures": tb, "elements": [{"from": [1, 0, 1], "to": [15, 10, 15], "faces": {
+        "north": face("front"), "south": face("side"), "east": face("side"), "west": face("side"), "up": face("inside"), "down": face("top")}}]})
+    wj(f"{A}/models/block/{tid}_chest_lid.json", {"parent": "minecraft:block/block", "textures": t, "elements": [{"from": [1, 10, 1], "to": [15, 14, 15], "faces": {
+        "north": face("front"), "south": face("side"), "east": face("side"), "west": face("side"), "up": face("top"), "down": face("top")}}]})
     for b in (f"{tid}_chest", f"{tid}_shulker_box"):
-        wj(f"{A}/blockstates/{b}.json", {"variants": {f"facing={f}": ({"model": f"jsn_storage:block/{b}"} | ({"y": y} if y else {}))
+        bm = f"{b}_base" if b.endswith("_chest") else b
+        wj(f"{A}/blockstates/{b}.json", {"variants": {f"facing={f}": ({"model": f"jsn_storage:block/{bm}"} | ({"y": y} if y else {}))
                                                       for f, y in (("north", 0), ("east", 90), ("south", 180), ("west", 270))}})
         wj(f"{A}/models/item/{b}.json", {"parent": f"jsn_storage:block/{b}"})
     wj(f"{A}/models/item/{tid}_backpack.json", {"parent": "minecraft:item/generated", "textures": {"layer0": f"jsn_storage:item/{tid}_backpack"}})

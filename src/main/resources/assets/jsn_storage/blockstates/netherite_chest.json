@@ -1,18 +1,18 @@
 {
   "variants": {
     "facing=north": {
-      "model": "jsn_storage:block/netherite_chest"
+      "model": "jsn_storage:block/netherite_chest_base"
     },
     "facing=east": {
-      "model": "jsn_storage:block/netherite_chest",
+      "model": "jsn_storage:block/netherite_chest_base",
       "y": 90
     },
     "facing=south": {
-      "model": "jsn_storage:block/netherite_chest",
+      "model": "jsn_storage:block/netherite_chest_base",
       "y": 180
     },
     "facing=west": {
-      "model": "jsn_storage:block/netherite_chest",
+      "model": "jsn_storage:block/netherite_chest_base",
       "y": 270
     }
   }

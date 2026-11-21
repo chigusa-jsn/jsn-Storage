@@ -25,6 +25,24 @@ public final class ClientSetup {
     }
 
     @SubscribeEvent
+    public static void renderers(net.neoforged.neoforge.client.event.EntityRenderersEvent.RegisterRenderers e) {
+        e.registerBlockEntityRenderer(JsnStorage.STORAGE_BE.get(), ChestLidRenderer::new);
+    }
+
+    @SubscribeEvent
+    public static void models(net.neoforged.neoforge.client.event.ModelEvent.RegisterAdditional e) {
+        for (com.chigusa.jsnstorage.storage.Tier t : com.chigusa.jsnstorage.storage.Tier.values()) {
+            e.register(ChestLidRenderer.lidModel(t));
+            e.register(BackpackLayer.wornModel(t));
+        }
+    }
+
+    @SubscribeEvent
+    public static void setup(net.neoforged.fml.event.lifecycle.FMLClientSetupEvent e) {
+        if (com.chigusa.jsnstorage.CuriosCompat.loaded()) e.enqueueWork(CuriosClient::register);
+    }
+
+    @SubscribeEvent
     public static void keys(RegisterKeyMappingsEvent e) {
         e.register(OPEN);
         NeoForge.EVENT_BUS.addListener(ClientTickEvent.Post.class, ev -> {

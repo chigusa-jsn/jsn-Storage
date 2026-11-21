@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "front": "jsn_storage:block/netherite_chest_front",
+    "side": "jsn_storage:block/netherite_chest_side",
+    "top": "jsn_storage:block/netherite_chest_top",
+    "particle": "jsn_storage:block/netherite_chest_side",
+    "inside": "jsn_storage:block/netherite_chest_inside"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        10,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#front"
+        },
+        "south": {
+          "texture": "#side"
+        },
+        "east": {
+          "texture": "#side"
+        },
+        "west": {
+          "texture": "#side"
+        },
+        "up": {
+          "texture": "#inside"
+        },
+        "down": {
+          "texture": "#top"
+        }
+      }
+    }
+  ]
+}

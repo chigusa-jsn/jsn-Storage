@@ -75,6 +75,19 @@ public class StorageMenu extends AbstractContainerMenu {
         for (int c = 0; c < 9; c++) addSlot(new LockSlot(pinv, c, invX + c * 18, invY + 58));
         width = storageX + cols * 18 + 8;
         height = invY + 58 + 18 + 8;
+        if (source.pos() != null && !pinv.player.level().isClientSide
+                && pinv.player.level().getBlockEntity(source.pos()) instanceof StorageBlockEntity be) {
+            be.changeOpeners(1);
+        }
+    }
+
+    @Override
+    public void removed(Player p) {
+        super.removed(p);
+        if (source.pos() != null && !p.level().isClientSide
+                && p.level().getBlockEntity(source.pos()) instanceof StorageBlockEntity be) {
+            be.changeOpeners(-1);
+        }
     }
 
     /** 開いているリュックは動かせない */

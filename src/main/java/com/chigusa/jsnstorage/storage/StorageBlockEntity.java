@@ -17,6 +17,11 @@ import java.util.UUID;
 public class StorageBlockEntity extends BlockEntity {
     public UUID id = UUID.randomUUID();
 
+    /** ふたの動き（画面側） */
+    public final net.minecraft.world.level.block.entity.ChestLidController lid = new net.minecraft.world.level.block.entity.ChestLidController();
+    /** 開いている人の数（サーバー側） */
+    private int openers;
+
     public StorageBlockEntity(BlockPos pos, BlockState state) {
         super(JsnStorage.STORAGE_BE.get(), pos, state);
     }
@@ -48,6 +53,33 @@ public class StorageBlockEntity extends BlockEntity {
             if (rest.isEmpty()) it.discard();
             else it.setItem(rest);
         }
+    }
+
+    public static void clientTick(net.minecraft.world.level.Level level, BlockPos pos, BlockState state, StorageBlockEntity be) {
+        be.lid.tickLid();
+    }
+
+    /** だれかが開いた／閉じた：ふたを動かして音を鳴らす */
+    public void changeOpeners(int delta) {
+        if (level == null || level.isClientSide || block().kind != Kind.CHEST) return;
+        int before = openers;
+        openers = Math.max(0, openers + delta);
+        if (before == 0 && openers > 0) playSound(net.minecraft.sounds.SoundEvents.CHEST_OPEN);
+        if (before > 0 && openers == 0) playSound(net.minecraft.sounds.SoundEvents.CHEST_CLOSE);
+        level.blockEvent(worldPosition, getBlockState().getBlock(), 1, openers);
+    }
+
+    private void playSound(net.minecraft.sounds.SoundEvent s) {
+        level.playSound(null, worldPosition, s, net.minecraft.sounds.SoundSource.BLOCKS, 0.5f, level.random.nextFloat() * 0.1f + 0.9f);
+    }
+
+    @Override
+    public boolean triggerEvent(int id, int param) {
+        if (id == 1) {
+            lid.shouldBeOpen(param > 0);
+            return true;
+        }
+        return super.triggerEvent(id, param);
     }
 
     @Override
