@@ -93,6 +93,11 @@ public class StorageInv extends ItemStackHandler {
         return Math.min(getSlotLimit(slot), stack.getMaxStackSize() * stackMultiplier);
     }
 
+    /** このマスに、この物を何こまで入れられるか（画面のマス用） */
+    public int limitFor(int slot, ItemStack stack) {
+        return getStackLimit(slot, stack);
+    }
+
     /** 同じ種類のアップグレードは1つまで */
     public boolean canAddUpgrade(int slot, ItemStack stack) {
         for (int i = 0; i < upgrades.getSlots(); i++)

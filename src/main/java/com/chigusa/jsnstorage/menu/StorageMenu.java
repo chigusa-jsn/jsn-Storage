@@ -65,7 +65,7 @@ public class StorageMenu extends AbstractContainerMenu {
         this.lockedSlot = source.slot();
         int cols = tier.cols, rows = tier.rows();
         for (int i = 0; i < tier.slots; i++)
-            addSlot(new SlotItemHandler(inv, i, storageX + (i % cols) * 18, storageY + (i / cols) * 18));
+            addSlot(new StorageSlot(inv, i, storageX + (i % cols) * 18, storageY + (i / cols) * 18));
         for (int j = 0; j < tier.upgrades; j++)
             addSlot(new SlotItemHandler(inv.upgrades, j, 8, storageY + j * 22));
         invX = storageX + (cols * 18 - 162) / 2;
@@ -87,6 +87,35 @@ public class StorageMenu extends AbstractContainerMenu {
         if (source.pos() != null && !p.level().isClientSide
                 && p.level().getBlockEntity(source.pos()) instanceof StorageBlockEntity be) {
             be.changeOpeners(-1);
+        }
+    }
+
+    /**
+     * 入れ物のマス。容量アップで 64 こより多く重ねられるようにする
+     * （マイクラ標準のマスは、手で置くときも Shift クリックのときも 64 こで止まってしまう）
+     */
+    static class StorageSlot extends SlotItemHandler {
+        private final StorageInv inv;
+
+        StorageSlot(StorageInv inv, int index, int x, int y) {
+            super(inv, index, x, y);
+            this.inv = inv;
+        }
+
+        @Override
+        public int getMaxStackSize() {
+            return inv.getSlotLimit(getSlotIndex());
+        }
+
+        @Override
+        public int getMaxStackSize(ItemStack stack) {
+            return inv.limitFor(getSlotIndex(), stack);
+        }
+
+        /** 取り出すときは、ふつうの1スタック分まで（手に 64 こより多く持たないように） */
+        @Override
+        public java.util.Optional<ItemStack> tryRemove(int count, int decrement, Player p) {
+            return super.tryRemove(Math.min(count, getItem().getMaxStackSize()), Math.min(decrement, getItem().getMaxStackSize()), p);
         }
     }
 
@@ -132,7 +161,13 @@ public class StorageMenu extends AbstractContainerMenu {
             if (!moveItemStackTo(s, upgradeEnd(), end, true)) return ItemStack.EMPTY;
         } else {
             boolean moved = UpgradeItem.is(s) && moveItemStackTo(s, storageEnd(), upgradeEnd(), false);
-            if (!moved && !moveItemStackTo(s, 0, storageEnd(), false)) return ItemStack.EMPTY;
+            if (!moved) {
+                // 同じ物があるマスに先に重ねて（64 こを超えてOK）、あふれた分を空いたマスへ
+                int before = s.getCount();
+                ItemStack rest = net.neoforged.neoforge.items.ItemHandlerHelper.insertItemStacked(inv, s.copy(), false);
+                if (rest.getCount() == before) return ItemStack.EMPTY;
+                s.setCount(rest.getCount());
+            }
         }
         if (s.isEmpty()) slot.setByPlayer(ItemStack.EMPTY);
         else slot.setChanged();
