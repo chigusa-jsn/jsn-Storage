@@ -115,6 +115,50 @@ public class StorageInv extends ItemStackHandler {
         dirty.run();
     }
 
+    /**
+     * 保存。容量アップで 99 こを超えて入っていると、マイクラ標準の保存（1〜99 まで）では保存できず落ちるので、
+     * 種類は 1 こ分で保存して、数は別の欄（Count）に入れる。
+     */
+    @Override
+    public CompoundTag serializeNBT(HolderLookup.Provider reg) {
+        net.minecraft.nbt.ListTag list = new net.minecraft.nbt.ListTag();
+        for (int i = 0; i < stacks.size(); i++) {
+            ItemStack s = stacks.get(i);
+            if (s.isEmpty()) continue;
+            CompoundTag it = new CompoundTag();
+            it.putInt("Slot", i);
+            it.putInt("Count", s.getCount());
+            it.put("Item", s.copyWithCount(1).save(reg));
+            list.add(it);
+        }
+        CompoundTag t = new CompoundTag();
+        t.put("Items", list);
+        t.putInt("Size", stacks.size());
+        return t;
+    }
+
+    @Override
+    public void deserializeNBT(HolderLookup.Provider reg, CompoundTag t) {
+        setSize(t.contains("Size", net.minecraft.nbt.Tag.TAG_INT) ? t.getInt("Size") : stacks.size());
+        net.minecraft.nbt.ListTag list = t.getList("Items", net.minecraft.nbt.Tag.TAG_COMPOUND);
+        for (int i = 0; i < list.size(); i++) {
+            CompoundTag it = list.getCompound(i);
+            int slot = it.getInt("Slot");
+            if (slot < 0 || slot >= stacks.size()) continue;
+            ItemStack s;
+            if (it.contains("Item")) {
+                // 新しい形：種類は1こ分、数は Count
+                s = ItemStack.parse(reg, it.getCompound("Item")).orElse(ItemStack.EMPTY);
+                if (!s.isEmpty()) s.setCount(Math.max(1, it.getInt("Count")));
+            } else {
+                // 前の形（ItemStackHandler の標準）
+                s = ItemStack.parse(reg, it).orElse(ItemStack.EMPTY);
+            }
+            stacks.set(slot, s);
+        }
+        onLoad();
+    }
+
     public CompoundTag save(HolderLookup.Provider reg) {
         CompoundTag t = new CompoundTag();
         t.putString("tier", tier.id);
