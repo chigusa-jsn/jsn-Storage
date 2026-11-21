@@ -61,11 +61,12 @@ public class StorageBlockEntity extends BlockEntity {
 
     /** だれかが開いた／閉じた：ふたを動かして音を鳴らす */
     public void changeOpeners(int delta) {
-        if (level == null || level.isClientSide || block().kind != Kind.CHEST) return;
+        if (level == null || level.isClientSide || block().kind == Kind.BACKPACK) return;
+        boolean shulker = block().kind == Kind.SHULKER;
         int before = openers;
         openers = Math.max(0, openers + delta);
-        if (before == 0 && openers > 0) playSound(net.minecraft.sounds.SoundEvents.CHEST_OPEN);
-        if (before > 0 && openers == 0) playSound(net.minecraft.sounds.SoundEvents.CHEST_CLOSE);
+        if (before == 0 && openers > 0) playSound(shulker ? net.minecraft.sounds.SoundEvents.SHULKER_BOX_OPEN : net.minecraft.sounds.SoundEvents.CHEST_OPEN);
+        if (before > 0 && openers == 0) playSound(shulker ? net.minecraft.sounds.SoundEvents.SHULKER_BOX_CLOSE : net.minecraft.sounds.SoundEvents.CHEST_CLOSE);
         level.blockEvent(worldPosition, getBlockState().getBlock(), 1, openers);
     }
 

@@ -29,24 +29,36 @@ public class ChestLidRenderer implements BlockEntityRenderer<StorageBlockEntity>
         return ModelResourceLocation.standalone(ResourceLocation.fromNamespaceAndPath(JsnStorage.MODID, "block/" + t.id + "_chest_lid"));
     }
 
+    public static ModelResourceLocation shulkerLidModel(Tier t) {
+        return ModelResourceLocation.standalone(ResourceLocation.fromNamespaceAndPath(JsnStorage.MODID, "block/" + t.id + "_shulker_box_lid"));
+    }
+
     @Override
     public void render(StorageBlockEntity be, float partial, PoseStack pose, MultiBufferSource buffers, int light, int overlay) {
         BlockState state = be.getBlockState();
-        if (!(state.getBlock() instanceof StorageBlock sb) || sb.kind != Kind.CHEST) return;
+        if (!(state.getBlock() instanceof StorageBlock sb) || sb.kind == Kind.BACKPACK) return;
         Direction facing = state.hasProperty(HorizontalDirectionalBlock.FACING) ? state.getValue(HorizontalDirectionalBlock.FACING) : Direction.NORTH;
         float open = be.lid.getOpenness(partial);
         open = 1.0f - open;
         open = 1.0f - open * open * open;
-        BakedModel model = Minecraft.getInstance().getModelManager().getModel(lidModel(sb.tier));
+        boolean shulker = sb.kind == Kind.SHULKER;
+        BakedModel model = Minecraft.getInstance().getModelManager().getModel(shulker ? shulkerLidModel(sb.tier) : lidModel(sb.tier));
         pose.pushPose();
         // 向き（モデルは北向きが基準）
         pose.translate(0.5, 0, 0.5);
         pose.mulPose(Axis.YP.rotationDegrees(-yRot(facing)));
         pose.translate(-0.5, 0, -0.5);
-        // 後ろのふち（z=15/16, y=10/16）を軸に開く
-        pose.translate(0, 10 / 16f, 15 / 16f);
-        pose.mulPose(Axis.XP.rotationDegrees(open * 85f));
-        pose.translate(0, -10 / 16f, -15 / 16f);
+        if (shulker) {
+            // シュルカー：ふたが半ブロック持ち上がりながら、くるっと回る
+            pose.translate(0.5, open * 0.5, 0.5);
+            pose.mulPose(Axis.YP.rotationDegrees(open * 270f));
+            pose.translate(-0.5, 0, -0.5);
+        } else {
+            // チェスト：後ろのふち（z=15/16, y=10/16）を軸に開く
+            pose.translate(0, 10 / 16f, 15 / 16f);
+            pose.mulPose(Axis.XP.rotationDegrees(open * 85f));
+            pose.translate(0, -10 / 16f, -15 / 16f);
+        }
         Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(pose.last(), buffers.getBuffer(RenderType.cutout()),
                 state, model, 1f, 1f, 1f, light, overlay, ModelData.EMPTY, RenderType.cutout());
         pose.popPose();

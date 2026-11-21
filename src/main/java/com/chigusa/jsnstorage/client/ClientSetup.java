@@ -33,6 +33,7 @@ public final class ClientSetup {
     public static void models(net.neoforged.neoforge.client.event.ModelEvent.RegisterAdditional e) {
         for (com.chigusa.jsnstorage.storage.Tier t : com.chigusa.jsnstorage.storage.Tier.values()) {
             e.register(ChestLidRenderer.lidModel(t));
+            e.register(ChestLidRenderer.shulkerLidModel(t));
             e.register(BackpackLayer.wornModel(t));
         }
     }

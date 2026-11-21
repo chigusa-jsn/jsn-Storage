@@ -95,8 +95,19 @@ for i, (tid, jn, bn, trim, trimd) in enumerate(TIERS):
         "north": face("front"), "south": face("side"), "east": face("side"), "west": face("side"), "up": face("inside"), "down": face("top")}}]})
     wj(f"{A}/models/block/{tid}_chest_lid.json", {"parent": "minecraft:block/block", "textures": t, "elements": [{"from": [1, 10, 1], "to": [15, 14, 15], "faces": {
         "north": face("front"), "south": face("side"), "east": face("side"), "west": face("side"), "up": face("top"), "down": face("top")}}]})
+    # シュルカー：下半分の台と、上半分のふた（ふたは開くと持ち上がって回る）
+    im = Image.new("RGBA", (16, 16)); dd = ImageDraw.Draw(im); dd.rectangle([0, 0, 15, 15], fill=hx("#3a2448"))
+    dd.rectangle([0, 0, 15, 15], outline=hx("#5a3a6a")); dd.rectangle([5, 5, 10, 10], outline=hx(trim))
+    save(im, f"{A}/textures/block/{tid}_shulker_inside.png")
+    st = {"front": f"jsn_storage:block/{tid}_shulker_front", "side": f"jsn_storage:block/{tid}_shulker_side",
+          "top": f"jsn_storage:block/{tid}_shulker_top", "inside": f"jsn_storage:block/{tid}_shulker_inside",
+          "particle": f"jsn_storage:block/{tid}_shulker_side"}
+    wj(f"{A}/models/block/{tid}_shulker_box_base.json", {"parent": "minecraft:block/block", "textures": st, "elements": [{"from": [0, 0, 0], "to": [16, 8, 16], "faces": {
+        "north": face("front"), "south": face("side"), "east": face("side"), "west": face("side"), "up": face("inside"), "down": face("top")}}]})
+    wj(f"{A}/models/block/{tid}_shulker_box_lid.json", {"parent": "minecraft:block/block", "textures": st, "elements": [{"from": [0, 8, 0], "to": [16, 16, 16], "faces": {
+        "north": face("front"), "south": face("side"), "east": face("side"), "west": face("side"), "up": face("top"), "down": face("inside")}}]})
     for b in (f"{tid}_chest", f"{tid}_shulker_box"):
-        bm = f"{b}_base" if b.endswith("_chest") else b
+        bm = f"{b}_base"
         wj(f"{A}/blockstates/{b}.json", {"variants": {f"facing={f}": ({"model": f"jsn_storage:block/{bm}"} | ({"y": y} if y else {}))
                                                       for f, y in (("north", 0), ("east", 90), ("south", 180), ("west", 270))}})
         wj(f"{A}/models/item/{b}.json", {"parent": f"jsn_storage:block/{b}"})
