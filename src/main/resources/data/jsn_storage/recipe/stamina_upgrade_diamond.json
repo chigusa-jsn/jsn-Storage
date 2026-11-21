@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "GDG",
+    "DUD",
+    "GDG"
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:gold_ingot"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "U": {
+      "item": "jsn_storage:stamina_upgrade_gold"
+    }
+  },
+  "result": {
+    "id": "jsn_storage:stamina_upgrade_diamond",
+    "count": 1
+  }
+}

@@ -72,6 +72,13 @@ public class StorageBlock extends BaseEntityBlock {
         return new StorageBlockEntity(pos, state);
     }
 
+    @org.jetbrains.annotations.Nullable
+    @Override
+    public <T extends BlockEntity> net.minecraft.world.level.block.entity.BlockEntityTicker<T> getTicker(Level level, BlockState state,
+                                                                                                   net.minecraft.world.level.block.entity.BlockEntityType<T> type) {
+        return level.isClientSide ? null : createTickerHelper(type, com.chigusa.jsnstorage.JsnStorage.STORAGE_BE.get(), StorageBlockEntity::serverTick);
+    }
+
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (player instanceof ServerPlayer sp && level.getBlockEntity(pos) instanceof StorageBlockEntity be) {

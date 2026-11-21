@@ -95,6 +95,13 @@ for i, (tid, jn, bn, trim, trimd) in enumerate(TIERS):
 RANKS = [("copper", "銅", "#d08050"), ("gold", "金", "#f0c030"), ("diamond", "ダイヤ", "#50d8e0")]
 UPG = {  # id: (日本語, 英語, ランクあり, 絵)
     "stack": ("容量アップ", "Stack", True, "stack"),
+    "pickup": ("自動で拾う", "Pickup", True, "pickup"),
+    "void": ("いらない物を消す", "Void", False, "void"),
+    "feeding": ("自動で食べる", "Feeding", True, "feeding"),
+    "refill": ("補充", "Refill", True, "refill"),
+    "xp": ("経験値貯蔵", "Experience", True, "xp"),
+    "mana": ("マナ貯蔵", "Mana", True, "mana"),
+    "stamina": ("スタミナ貯蔵", "Stamina", True, "stamina"),
 }
 def upgrade_tex(name, rim, icon):
     im = Image.new("RGBA", (16, 16)); d = ImageDraw.Draw(im)
@@ -163,6 +170,13 @@ def ranked_recipes(uid, center):
     shaped(f"{uid}_upgrade_gold", ["GGG", "GUG", "GGG"], {"G": RANK_MAT["gold"], "U": f"{uid}_upgrade_copper"})
     shaped(f"{uid}_upgrade_diamond", ["GDG", "DUD", "GDG"], {"G": RANK_MAT["gold"], "D": RANK_MAT["diamond"], "U": f"{uid}_upgrade_gold"})
 ranked_recipes("stack", "minecraft:chest")
+ranked_recipes("pickup", "minecraft:hopper")
+ranked_recipes("feeding", "minecraft:bread")
+ranked_recipes("refill", "minecraft:dispenser")
+ranked_recipes("xp", "minecraft:experience_bottle")
+ranked_recipes("mana", "minecraft:lapis_block")
+ranked_recipes("stamina", "minecraft:sugar")
+shaped("void_upgrade", ["OEO", "EUE", "OEO"], {"O": "minecraft:obsidian", "E": "minecraft:ender_pearl", "U": "upgrade_base"})
 
 JA = {"key.categories.jsn_storage": "jsn-Storage", "key.jsn_storage.open": "リュックを開く", "item.jsn_storage.upgrade_base": "アップグレードの土台",
       "curios.identifier.back": "背中"}

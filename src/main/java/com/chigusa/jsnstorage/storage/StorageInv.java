@@ -43,6 +43,10 @@ public class StorageInv extends ItemStackHandler {
         };
     }
 
+    public void markDirty() {
+        dirty.run();
+    }
+
     public void onDirty(Runnable r) {
         this.dirty = r;
     }
@@ -65,6 +69,18 @@ public class StorageInv extends ItemStackHandler {
             return bi.getBlock() instanceof ShulkerBoxBlock || (bi.getBlock() instanceof StorageBlock sb && sb.kind == Kind.SHULKER);
         }
         return false;
+    }
+
+    /** 「いらない物を消す」に登録した物は、入れたとたんに消える */
+    @Override
+    public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+        if (!stack.isEmpty() && voids(stack)) return ItemStack.EMPTY;
+        return super.insertItem(slot, stack, simulate);
+    }
+
+    public boolean voids(ItemStack stack) {
+        ItemStack v = com.chigusa.jsnstorage.upgrade.Upgrades.find(this, com.chigusa.jsnstorage.upgrade.UpgradeType.VOID);
+        return !v.isEmpty() && com.chigusa.jsnstorage.upgrade.UpgradeData.matches(v, stack);
     }
 
     @Override

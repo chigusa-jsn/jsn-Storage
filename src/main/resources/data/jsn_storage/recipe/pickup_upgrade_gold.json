@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "GGG",
+    "GUG",
+    "GGG"
+  ],
+  "key": {
+    "G": {
+      "item": "minecraft:gold_ingot"
+    },
+    "U": {
+      "item": "jsn_storage:pickup_upgrade_copper"
+    }
+  },
+  "result": {
+    "id": "jsn_storage:pickup_upgrade_gold",
+    "count": 1
+  }
+}

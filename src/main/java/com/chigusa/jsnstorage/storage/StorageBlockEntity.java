@@ -30,6 +30,25 @@ public class StorageBlockEntity extends BlockEntity {
         return StorageData.get(sl.getServer()).inv(id, block().tier, block().kind);
     }
 
+    /** チェスト・シュルカーの「自動で拾う」：近くに落ちている登録した物を吸いこむ（だれかが落とした物は拾わない） */
+    public static void serverTick(net.minecraft.world.level.Level level, BlockPos pos, BlockState state, StorageBlockEntity be) {
+        if (level.getGameTime() % 20 != (pos.asLong() & 15)) return;
+        StorageInv inv = be.inv();
+        if (inv == null) return;
+        var up = com.chigusa.jsnstorage.upgrade.Upgrades.find(inv, com.chigusa.jsnstorage.upgrade.UpgradeType.PICKUP);
+        if (up.isEmpty()) return;
+        int rank = ((com.chigusa.jsnstorage.upgrade.UpgradeItem) up.getItem()).rank;
+        double r = new double[]{3, 6, 10}[rank];
+        for (var it : level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, new net.minecraft.world.phys.AABB(pos).inflate(r))) {
+            if (!it.isAlive() || it.hasPickUpDelay() || it.getOwner() instanceof net.minecraft.world.entity.player.Player) continue;
+            var s = it.getItem();
+            if (!com.chigusa.jsnstorage.upgrade.UpgradeData.matches(up, s)) continue;
+            var rest = net.neoforged.neoforge.items.ItemHandlerHelper.insertItemStacked(inv, s.copy(), false);
+            if (rest.isEmpty()) it.discard();
+            else it.setItem(rest);
+        }
+    }
+
     @Override
     protected void saveAdditional(CompoundTag t, HolderLookup.Provider reg) {
         super.saveAdditional(t, reg);

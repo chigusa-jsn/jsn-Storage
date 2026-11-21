@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "CCC",
+    "CUC",
+    "CXC"
+  ],
+  "key": {
+    "C": {
+      "item": "minecraft:copper_ingot"
+    },
+    "U": {
+      "item": "jsn_storage:upgrade_base"
+    },
+    "X": {
+      "item": "minecraft:experience_bottle"
+    }
+  },
+  "result": {
+    "id": "jsn_storage:xp_upgrade_copper",
+    "count": 1
+  }
+}

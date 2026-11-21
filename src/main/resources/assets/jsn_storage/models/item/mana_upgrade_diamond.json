@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "jsn_storage:item/mana_upgrade_diamond"
+  }
+}
