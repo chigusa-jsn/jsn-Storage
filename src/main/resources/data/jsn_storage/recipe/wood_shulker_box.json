@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "S",
+    "C",
+    "S"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:shulker_shell"
+    },
+    "C": {
+      "item": "jsn_storage:wood_chest"
+    }
+  },
+  "result": {
+    "id": "jsn_storage:wood_shulker_box",
+    "count": 1
+  }
+}

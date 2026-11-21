@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "jsn_storage:iron_chest",
+    "jsn_storage:gold_chest",
+    "jsn_storage:diamond_chest",
+    "jsn_storage:netherite_chest",
+    "jsn_storage:wood_shulker_box",
+    "jsn_storage:iron_shulker_box",
+    "jsn_storage:gold_shulker_box",
+    "jsn_storage:diamond_shulker_box",
+    "jsn_storage:netherite_shulker_box"
+  ]
+}

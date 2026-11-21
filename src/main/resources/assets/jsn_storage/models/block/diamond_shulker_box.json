@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "front": "jsn_storage:block/diamond_shulker_front",
+    "side": "jsn_storage:block/diamond_shulker_side",
+    "top": "jsn_storage:block/diamond_shulker_top"
+  }
+}
