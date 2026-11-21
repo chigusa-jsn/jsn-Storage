@@ -9,6 +9,7 @@ public enum UpgradeType {
     VOID("void", "いらない物を消す", false, true, true, true, "登録したアイテムは、入れたとたんに消える"),
     FEEDING("feeding", "自動で食べる", true, false, false, true, "おなかがすいたら、登録した食べ物を食べる（金：むだなく選ぶ・ダイヤ：HPが減ったら回復の食べ物も）"),
     REFILL("refill", "補充", true, false, false, true, "手のブロックがなくなったら補充（金：矢も・ダイヤ：こわれそうな道具を交換）"),
+    COMPACT("compact", "圧縮", true, true, true, true, "登録した物がたまると、ブロックにまとめる（鉄インゴット9こ→鉄ブロック、など）。もどせる組み合わせだけ"),
     XP("xp", "経験値貯蔵", true, true, true, true, "経験値を預けたり引き出したりできる"),
     MANA("mana", "マナ貯蔵", true, true, true, true, "マナをためておける（jsn-Craft）。リュックなら満タンのときにため、減ったら自動で補充"),
     STAMINA("stamina", "スタミナ貯蔵", true, true, true, true, "スタミナをためておける（jsn-Craft）。リュックなら満タンのときにため、減ったら自動で補充");
@@ -41,6 +42,7 @@ public enum UpgradeType {
             case PICKUP -> 9 * (rank + 1);
             case VOID -> 18;
             case FEEDING -> 9;
+            case COMPACT -> new int[]{3, 9, 18}[rank];
             default -> 0;
         };
     }

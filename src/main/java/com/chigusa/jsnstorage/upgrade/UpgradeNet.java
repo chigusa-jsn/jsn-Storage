@@ -38,7 +38,12 @@ public final class UpgradeNet {
         switch (a.action()) {
             case SET_FILTER -> {
                 if (a.value() < 0 || a.value() >= u.type.filterSize(u.rank)) return;
-                UpgradeData.setFilter(up, a.value(), UpgradeData.item(a.item()) == null ? "" : a.item());
+                var item = UpgradeData.item(a.item());
+                if (u.type == UpgradeType.COMPACT && item != null && !Compactor.can(p.level(), item)) {
+                    p.displayClientMessage(Component.literal("それは圧縮できないよ（9こ→1こで、もどせる物だけ）"), true);
+                    return;
+                }
+                UpgradeData.setFilter(up, a.value(), item == null ? "" : a.item());
             }
             case XP_IN, XP_OUT -> xp(p, up, u, a.action() == XP_IN, a.value());
             case BATTERY_IN, BATTERY_OUT -> {

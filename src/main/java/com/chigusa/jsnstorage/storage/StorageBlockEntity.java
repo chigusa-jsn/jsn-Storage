@@ -35,6 +35,7 @@ public class StorageBlockEntity extends BlockEntity {
         if (level.getGameTime() % 20 != (pos.asLong() & 15)) return;
         StorageInv inv = be.inv();
         if (inv == null) return;
+        com.chigusa.jsnstorage.upgrade.Compactor.run(level, inv);
         var up = com.chigusa.jsnstorage.upgrade.Upgrades.find(inv, com.chigusa.jsnstorage.upgrade.UpgradeType.PICKUP);
         if (up.isEmpty()) return;
         int rank = ((com.chigusa.jsnstorage.upgrade.UpgradeItem) up.getItem()).rank;

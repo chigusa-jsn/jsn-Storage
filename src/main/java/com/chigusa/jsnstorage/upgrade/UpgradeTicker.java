@@ -65,6 +65,7 @@ public final class UpgradeTicker {
         for (StorageInv inv : bags) {
             ItemStack pick = Upgrades.find(inv, UpgradeType.PICKUP);
             if (!pick.isEmpty()) pickup(p, inv, pick);
+            if (t % 20 == 0) Compactor.run(p.level(), inv);
             if (t % 40 == 0) {
                 ItemStack feed = Upgrades.find(inv, UpgradeType.FEEDING);
                 if (!feed.isEmpty() && feed(p, inv, feed)) break;

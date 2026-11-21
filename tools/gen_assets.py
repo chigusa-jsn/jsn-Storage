@@ -99,6 +99,7 @@ UPG = {  # id: (日本語, 英語, ランクあり, 絵)
     "void": ("いらない物を消す", "Void", False, "void"),
     "feeding": ("自動で食べる", "Feeding", True, "feeding"),
     "refill": ("補充", "Refill", True, "refill"),
+    "compact": ("圧縮", "Compacting", True, "compact"),
     "xp": ("経験値貯蔵", "Experience", True, "xp"),
     "mana": ("マナ貯蔵", "Mana", True, "mana"),
     "stamina": ("スタミナ貯蔵", "Stamina", True, "stamina"),
@@ -119,6 +120,10 @@ def upgrade_tex(name, rim, icon):
         d.ellipse([3, 5, 11, 12], fill=Rd); d.line([7, 5, 8, 2], fill=hx("#806040")); d.ellipse([8, 2, 11, 4], fill=G)
     elif icon == "refill":
         d.arc([3, 3, 12, 12], 30, 330, fill=B, width=2); d.polygon([(10, 2), (13, 5), (9, 6)], fill=B)
+    elif icon == "compact":
+        for k in range(3):
+            for j in range(3): d.rectangle([3 + k * 2, 3 + j * 2, 4 + k * 2, 4 + j * 2], fill=hx("#c8ccd0"))
+        d.polygon([(9, 6), (12, 8), (9, 10)], fill=Y); d.rectangle([10, 9, 13, 12], fill=hx("#e8e8f0"), outline=hx("#808090"))
     elif icon == "xp":
         d.ellipse([3, 3, 12, 12], fill=hx("#80f040"), outline=hx("#40a020")); d.point([(6, 6), (7, 6)], fill=W)
     elif icon == "mana":
@@ -174,6 +179,7 @@ ranked_recipes("pickup", "minecraft:hopper")
 ranked_recipes("feeding", "minecraft:bread")
 ranked_recipes("refill", "minecraft:dispenser")
 ranked_recipes("xp", "minecraft:experience_bottle")
+ranked_recipes("compact", "minecraft:piston")
 ranked_recipes("mana", "minecraft:lapis_block")
 ranked_recipes("stamina", "minecraft:sugar")
 shaped("void_upgrade", ["OEO", "EUE", "OEO"], {"O": "minecraft:obsidian", "E": "minecraft:ender_pearl", "U": "upgrade_base"})
